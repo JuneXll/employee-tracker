@@ -106,20 +106,20 @@ const viewRoles = ()=>{
 
 };
 
-// Selected role queries Role Title for Add employee
-    let roleArray=[];
-    const selectRole = ()=>{
-    for(let i=0;i<res.length;i++){
-        roleArray.push(res[i].title);
-    }
-    return roleArray;
+//Role selection query
+const selectRole = ()=>{
+    let roleArr = [];
+        connection.query("SELECT * FROM role",(err,res)=>{
+            if(err){
+                console.log(err)
+            } else {
+                for(let i=0;i<res.length;i++){
+                    roleArr.push(res[i].title);
+                }
+            }
+                return roleArr;
+        })
 }
-
-
-connection.query("SELECT * FROM ROLE", (err,res)=>{
-    if(err){
-        console.log(err)
-    } else {
 
 //Add an employee
 const addEmployee = ()=>{
@@ -133,9 +133,9 @@ const addEmployee = ()=>{
             name: "last_name",
             message:"What is the employee's last name?"
         },{
-            type:"number",
+            type:"input",
             name: "manager_id",
-            message:"What is the employee's manager's ID?"
+            message:"What is manager's id?"
         },{
             type:"list",
             name: "role",
@@ -144,17 +144,17 @@ const addEmployee = ()=>{
         }
         ]).then((result)=>{
             let role_id;
-            for(let j=0;j<res.length;j++){
-                if(res[j].title===result.role){
-                    role_id=res[j].id;
-                    console.log(role_id)
+            for(let j=0;j>result.length;j++){
+                if(res[j].title == result.role){
+                    role_id = res[j].id;
+                    console.log(role_id);
                 }
             }
-                connection.query("INSERT INTO employee SET ?",{
-                    first_name:result.first_name,
-                    last_name:result.last_name,
-                    manager_id:result.manager_id,
-                    role_id:role_id,
+            connection.query("INSERT INTO employee SET ?",{
+                first_name:result.first_name,
+                last_name:result.last_name,
+                manager_id: result.manager_id,
+                role_id: role_id
                 },(err,res)=>{
                     if(err){
                         console.log(err);
@@ -165,10 +165,9 @@ const addEmployee = ()=>{
                     }
                 })
             })
-        }
-    })
+    };   
 
-};
+  
 
 const addDept = ()=>{
 

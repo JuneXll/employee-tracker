@@ -1,11 +1,13 @@
 USE employee_trackerDB;
 
 INSERT INTO employee (FIRST_NAME,LAST_NAME,MANAGER_ID,ROLE_ID) VALUES 
-("June", "Hernandez",1,123),
-("Jany", "Rodriguez",2,345),
-("Ariel", "Sakowitz",3,567),
-("Deanna","Rams",4,678),
-("Emily","Perez",5,890);
+("June", "Hernandez",123,1),
+("Jany", "Rodriguez",345,2),
+("Ariel", "Sakowitz",567,3),
+("Deanna","Rams",789,4),
+("Emily","Perez",901,5),
+("Jason","Lopez", NULL,6),
+("Lisa","Gonzalez",NULL,7);
 
 INSERT INTO department (NAME) VALUES
 ("Finance"),
@@ -20,3 +22,7 @@ INSERT INTO role (TITLE,SALARY,DEPARTMENT_ID) VALUES
 ("Sales Representative",60000,3),
 ("Manager",65000,4),
 ("Web Developer",90000,5);
+
+SELECT * FROM employee;
+SELECT * FROM department;
+SELECT * FROM role;
