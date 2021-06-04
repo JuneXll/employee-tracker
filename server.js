@@ -95,31 +95,24 @@ const viewDept = () =>{
 const viewRoles = ()=>{
     let query = "SELECT * FROM role";
     connection.query(query,(err,res)=>{
-        if(err){
-            console.log(err);
-        } else {
+        if(err) throw err;
             console.log(`There are ${res.length} roles!`);
             console.table("All Roles:", res);
             userOptions();
-        }
-    })
-
+        })
 };
 
 //Role selection query
-const selectRole = ()=>{
+const selectRole = async ()=>{
     let roleArr = [];
-        connection.query("SELECT * FROM role",(err,res)=>{
-            if(err){
-                console.log(err)
-            } else {
-                for(let i=0;i<res.length;i++){
-                    roleArr.push(res[i].title);
-                }
+        connection.query("SELECT title FROM role",(err,res)=>{
+            if(err) throw err;
+            for(let i=0;i<res.length;i++){
+                roleArr.push(res[i].title);
             }
-                return roleArr;
+            return roleArr;
         })
-}
+} 
 
 //Add an employee
 const addEmployee = ()=>{
@@ -150,41 +143,32 @@ const addEmployee = ()=>{
                     console.log(role_id);
                 }
             }
-            connection.query("INSERT INTO employee SET ?",{
-                first_name:result.first_name,
-                last_name:result.last_name,
-                manager_id: result.manager_id,
-                role_id: role_id
-                },(err,res)=>{
-                    if(err){
-                        console.log(err);
-                    } else {
+            connection.query("INSERT INTO employee(first_name,last_name,manager_id, role_id) VALUES (?,?,?,?)",[result.first_name,result.last_name,result.manager_id, result.role_id],(err,res)=>{
+                    if(err) throw err;
                         console.log("New employee has been added!");
                         console.table(res);
                         userOptions();
-                    }
-                })
-            })
-    };   
-
-  
+                    })
+            })  
+}  
 
 const addDept = ()=>{
 
-};
+}
 
 const addRole = ()=>{
 
-};
+}
 
 const updateEmployee = ()=>{
-
-};
+     
+}
 
 const deleteEmployee = ()=>{
 
-};
+}
 
 const exit = ()=>{
-
-};
+    connection.end();
+    process.exit();
+}
