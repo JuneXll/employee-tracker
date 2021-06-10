@@ -26,7 +26,16 @@ const userOptions = ()=>{
         type:"list",
         name:"options",
         message: "EMPLOYEE DATABASE: What would you like to do?",
-        choices:["View all employees","View all departments","View all roles","Add an employee","Add a department","Add a role","Update employee role","Delete an employee","EXIT"]
+        choices:[
+            "View all employees",
+            "View all departments",
+            "View all roles",
+            "Add an employee",
+            "Add a department",
+            "Add a role",
+            "Update employee role",
+            "Delete an employee",
+            "EXIT"]
     }).then((result)=>{
         switch(result.options){
             case "View all employees":
@@ -103,15 +112,15 @@ const viewRoles = ()=>{
 };
 
 //Role selection query
-const selectRole = async ()=>{
+const selectRole = async () => {
     let roleArr = [];
         connection.query("SELECT title FROM role",(err,res)=>{
             if(err) throw err;
             for(let i=0;i<res.length;i++){
                 roleArr.push(res[i].title);
             }
-            return roleArr;
         })
+        return roleArr;
 } 
 
 //Add an employee
@@ -153,6 +162,14 @@ const addEmployee = ()=>{
 }  
 
 const addDept = ()=>{
+    inquirer.prompt({
+            type:'input',
+            name:'newDept',
+            message:'What is the name of the new Department?'
+    }).then((result)=>{
+        if (err) throw err;
+        connection.query("INSERT INTO department")
+    })
 
 }
 
