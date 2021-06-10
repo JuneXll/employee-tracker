@@ -5,9 +5,7 @@ INSERT INTO employee (FIRST_NAME,LAST_NAME,MANAGER_ID,ROLE_ID) VALUES
 ("Jany", "Rodriguez",345,2),
 ("Ariel", "Sakowitz",567,3),
 ("Deanna","Rams",789,4),
-("Emily","Perez",901,5),
-("Jason","Lopez", NULL,6),
-("Lisa","Gonzalez",NULL,7);
+("Emily","Perez",901,5);
 
 INSERT INTO department (NAME) VALUES
 ("Finance"),

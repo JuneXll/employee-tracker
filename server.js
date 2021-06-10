@@ -102,7 +102,7 @@ const viewDept = () =>{
 
 //View all roles
 const viewRoles = ()=>{
-    let query = "SELECT * FROM role";
+    let query = "SELECT title FROM role";
     connection.query(query,(err,res)=>{
         if(err) throw err;
             console.log(`There are ${res.length} roles!`);
@@ -112,19 +112,20 @@ const viewRoles = ()=>{
 };
 
 //Role selection query
-const selectRole = async () => {
+const selectRole = () => {
     let roleArr = [];
-        connection.query("SELECT title FROM role",(err,res)=>{
+        connection.query("SELECT id,title FROM role",(err,res)=>{
             if(err) throw err;
             for(let i=0;i<res.length;i++){
                 roleArr.push(res[i].title);
             }
         })
         return roleArr;
+        
 } 
 
 //Add an employee
-const addEmployee = ()=>{
+const addEmployee = async ()=>{
     inquirer.prompt([
         {
             type:"input",
@@ -142,17 +143,18 @@ const addEmployee = ()=>{
             type:"list",
             name: "role",
             message:"What is the employee's role?",
-            choices: selectRole()
+            choices: await selectRole()
         }
         ]).then((result)=>{
-            let role_id;
-            for(let j=0;j>result.length;j++){
-                if(res[j].title == result.role){
-                    role_id = res[j].id;
-                    console.log(role_id);
-                }
-            }
-            connection.query("INSERT INTO employee(first_name,last_name,manager_id, role_id) VALUES (?,?,?,?)",[result.first_name,result.last_name,result.manager_id, result.role_id],(err,res)=>{
+            let role_id=selectRole().indexOf(result.role)+1
+            console.log(role_id);
+            // for(let j=0;j>result.length;j++){
+            //     if(res[j].title == result.role){
+            //         role_id = res[j].id;
+            //         console.log(role_id);
+            //     }
+            // }
+            connection.query("INSERT INTO employee(first_name,last_name,manager_id, role_id) VALUES (?,?,?,?)",[result.first_name,result.last_name,result.manager_id, role_id],(err,res)=>{
                     if(err) throw err;
                         console.log("New employee has been added!");
                         console.table(res);
