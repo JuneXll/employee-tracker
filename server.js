@@ -21,6 +21,7 @@ connection.connect((error)=>{
     }
 });
 
+//Starting prompt
 const userOptions = ()=>{
     inquirer.prompt({
         type:"list",
@@ -111,19 +112,22 @@ const viewRoles = ()=>{
         })
 };
 
-
+let role_id = [];
+let roleArr = [];
 //Role selection query
 const selectRole = () => {
-    let roleArr = [];
+    
     connection.query("SELECT id,title FROM role",(err,res)=>{
         if(err) throw err;
         for(let i=0;i<res.length;i++){
-            //Figure out how to convert this into key/values
             roleArr.push(res[i].title);
-            roleArr.push(res[i].id);
+            role_id.push({
+                'id':res[i].id,
+                'title': res[i].title
+            })
         }
-            console.log(roleArr);
-            console.log(res);
+        console.log(role_id.values(role_id));
+        console.log(roleArr);
     })
         return roleArr;
         
@@ -152,8 +156,15 @@ const addEmployee = async ()=>{
         }
         ]).then((result)=>{
             //Once key/values are figured out then we can access role id
-            let role_id= roleArr.length+1;
-            console.log(role_id);
+            let roleId = role_id.map((result.role) => role_id.id);
+            // let role_id;
+            // for(let i=0;i>roleArr.length;i++){
+            //     if(roleArr.title === result.role){
+            //         role_id.values(role_id.id);
+            //     }
+            // }
+            // let role_id= roleArr.length+1;
+            // console.log(role_id);
     
             connection.query("INSERT INTO employee(first_name,last_name,manager_id, role_id) VALUES (?,?,?,?)",[result.first_name,result.last_name,result.manager_id, role_id],(err,res)=>{
                     if(err) throw err;
