@@ -112,28 +112,19 @@ const viewRoles = ()=>{
         })
 };
 
-let role_id = [];
-let roleArr = [];
 //Role selection query
 const selectRole = () => {
-    
-    connection.query("SELECT id,title FROM role",(err,res)=>{
-        if(err) throw err;
-        for(let i=0;i<res.length;i++){
-            roleArr.push(res[i].title);
-            role_id.push({
-                'id':res[i].id,
-                'title': res[i].title
-            })
-        }
-        // console.log(roleArr);
-    })
-        return roleArr;
-        
+    return new Promise((resolve,reject)=>{
+        connection.query("SELECT id,title FROM role",(err,res)=>{
+            if(err) throw err;
+            return resolve(res);
+        })
+    })    
 } 
 
 //Add an employee
 const addEmployee = async ()=>{
+    const roles = await selectRole();
     inquirer.prompt([
         {
             type:"input",
@@ -151,23 +142,16 @@ const addEmployee = async ()=>{
             type:"list",
             name: "role",
             message:"What is the employee's role?",
-            choices: await selectRole()
+            choices: roles.map(role=>role.title)
         }
         ]).then((result)=>{
-            let role_id;
-            for(let i=0;i>roleArr.length;i++){
-                if(roleArr.title === result.role){
-                    role_id.values(role_id.id);
-                }
-            }
-            // let role_id= roleArr.length+1;
-            // console.log(role_id);
-    
+            const role = roles.find(role=>role.title==result.role);
+            let role_id =role.id;
+            
             connection.query("INSERT INTO employee(first_name,last_name,manager_id, role_id) VALUES (?,?,?,?)",[result.first_name,result.last_name,result.manager_id, role_id],(err,res)=>{
                     if(err) throw err;
                         console.log("New employee has been added!");
-                        console.table(res);
-                        userOptions();
+                        viewEmployees();
                     })
             })  
 }  
