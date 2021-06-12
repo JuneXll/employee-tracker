@@ -126,8 +126,7 @@ const selectRole = () => {
                 'title': res[i].title
             })
         }
-        console.log(role_id.values(role_id));
-        console.log(roleArr);
+        // console.log(roleArr);
     })
         return roleArr;
         
@@ -155,14 +154,12 @@ const addEmployee = async ()=>{
             choices: await selectRole()
         }
         ]).then((result)=>{
-            //Once key/values are figured out then we can access role id
-            let roleId = role_id.map((result.role) => role_id.id);
-            // let role_id;
-            // for(let i=0;i>roleArr.length;i++){
-            //     if(roleArr.title === result.role){
-            //         role_id.values(role_id.id);
-            //     }
-            // }
+            let role_id;
+            for(let i=0;i>roleArr.length;i++){
+                if(roleArr.title === result.role){
+                    role_id.values(role_id.id);
+                }
+            }
             // let role_id= roleArr.length+1;
             // console.log(role_id);
     
