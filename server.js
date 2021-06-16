@@ -103,7 +103,7 @@ const viewDept = () =>{
 
 //View all roles
 const viewRoles = ()=>{
-    let query = "SELECT title FROM role";
+    let query = "SELECT * FROM role";
     connection.query(query,(err,res)=>{
         if(err) throw err;
             console.log(`There are ${res.length} roles!`);
@@ -157,27 +157,96 @@ const addEmployee = async ()=>{
 }  
 
 const addDept = ()=>{
-    inquirer.prompt({
-            type:'input',
-            name:'newDept',
-            message:'What is the name of the new Department?'
-    }).then((result)=>{
-        if (err) throw err;
-        connection.query("INSERT INTO department")
-    })
+    inquirer.prompt([
+        {
+            type:"input",
+            name: "dept_name",
+            message:"What is the name of the new department?"
+        }
+        ]).then((result)=>{
+            connection.query("INSERT INTO department(name) VALUES (?)",[result.dept_name],(err,res)=>{
+                    if(err) throw err;
+                        console.log("New department has been added!");
+                        viewDept();
+                    })
+            })
+    }
 
+//department selection query
+const selectDept = () => {
+    return new Promise((resolve,reject)=>{
+        connection.query("SELECT id,name FROM department",(err,res)=>{
+            if(err) throw err;
+            return resolve(res);
+        })
+    })    
 }
 
-const addRole = ()=>{
-
-}
+const addRole = async ()=>{
+    const depts = await selectDept();
+    inquirer.prompt([
+        {
+            type:"input",
+            name: "role_name",
+            message:"What is name of the new role?"
+        },{
+            type:"input",
+            name: "salary",
+            message:"What is the new role's salary?"
+        },{
+            type:"list",
+            name: "department",
+            message:"What is the new role's department?",
+            choices: depts.map(dept=>dept.name)
+        }
+        ]).then((result)=>{
+            const dept = depts.find(dept=>dept.name==result.department);
+            let dept_id =dept.id;
+            
+            connection.query("INSERT INTO role(title,salary,department_id) VALUES (?,?,?)",[result.role_name,result.salary,dept_id],(err,res)=>{
+                    if(err) throw err;
+                        console.log("New role has been added!");
+                        viewRoles();
+                    })
+            })  
+}  
 
 const updateEmployee = ()=>{
      
 }
 
-const deleteEmployee = ()=>{
+// //Employee selection query
+const selectEmployee = () => {
+    return new Promise((resolve,reject)=>{
+        connection.query("SELECT first_name,last_name FROM employee",(err,res)=>{
+            if(err) throw err;
+            console.log(res);
+            return resolve(res);
+        })
+    })    
+} 
 
+const deleteEmployee = async () => {
+    const employeeList = await selectEmployee();
+    inquirer.prompt([
+        {
+            type:"list",
+            name:"fname",
+            message:"What is the first name of the  employee you would like to delete?",
+            choices:employeeList.map(employee=>employee.first_name)
+        },{
+            type:"list",
+            name:"lname",
+            message:"What is the last name of the  employee you would like to delete?",
+            choices:employeeList.map(employee=>employee.last_name)
+        }
+    ]).then((result)=>{
+        connection.query("DELETE FROM employee WHERE (?,?)",[result.fname,result.lname],(err,res)=>{
+                if(err) throw err;
+                    console.log(`${result.fname} ${result.lname} has been deleted`);
+                    viewEmployees();
+                })
+        })
 }
 
 const exit = ()=>{
