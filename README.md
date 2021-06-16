@@ -6,7 +6,6 @@ Employee Tracker uses Node CLI to track and build companies database based on th
 ## Demonstrations
 
 ![gif](https://github.com/JuneXll/employee-tracker/blob/main/demo.gif)
-test
 
 
 ## Installation
